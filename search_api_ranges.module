@@ -347,7 +347,8 @@ function search_api_ranges_block_slider_view_form_submit($form, &$form_state) {
   $params = drupal_get_query_parameters($_GET, array('q', 'page'));
 
   // Get pretty path path and goto()
-  $path = request_path();
+  list($language, $path) = language_url_split_prefix(request_path(), language_list());
+  $language = $language ? $language : NULL;
   if (module_exists('facetapi_pretty_paths')) {
     $exists = FALSE;
     $split_path = explode('/', $path);
@@ -390,7 +391,7 @@ function search_api_ranges_block_slider_view_form_submit($form, &$form_state) {
     };
   };
 
-  drupal_goto($path, array('query' => array($params)));
+  drupal_goto($path, array('query' => array($params), 'language' => $language));
 }
 
 /**
