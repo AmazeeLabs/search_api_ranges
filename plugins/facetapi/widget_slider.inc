@@ -107,7 +107,15 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     // Calculate user input from/to values (different concept than min/max)
     foreach ($this->facet->getAdapter()->getAllActiveItems() as $key => $active_item) {
       if ($active_item['field alias'] == $this->facet['field alias']) {
-        $values = explode(' ', substr($active_item['value'], 1, -1));
+        if (strpos($active_item['value'], ' ') === FALSE) {
+          $values = array(
+            0 => $active_item['value'],
+            2 => $active_item['value'],
+          );
+        }
+        else {
+          $values = explode(' ', substr($active_item['value'], 1, -1));
+        }
         $from_value = round($values[0]);
         $to_value = round($values[2]);
         break;
