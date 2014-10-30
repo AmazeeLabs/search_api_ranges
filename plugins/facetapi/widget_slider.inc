@@ -88,6 +88,9 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     $index = search_api_index_load($index_id[1]);
     list($query, $results) = $this->facet->getAdapter()->getCurrentSearch();
 
+    // Make a clone of the query, as to not alter the current search query
+    $query = clone $query;
+
     // Prepare variables for min/max query
     $variables = array(
       'index' => $index,
