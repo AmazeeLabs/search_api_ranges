@@ -41,9 +41,9 @@
         });
 
         rangeFrom.numeric();
-        rangeFrom.bind('keyup', function() {
+        rangeFrom.bind('keyup', function(e) {
           clearTimeout(submitTimeout);
-          if (!isNaN(rangeFrom.val()) && rangeFrom.val() !== '') {
+          if (!isNaN(rangeFrom.val()) && rangeFrom.val() !== '' && e.keyCode == 13) {
             var value = parseInt(rangeFrom.val());
             if (value > parseInt(rangeTo.val())) {
               value = parseInt(rangeTo.val());
@@ -52,11 +52,21 @@
             delaySubmit(widget);
           }
         });
+        // Autoselect text on focus
+        // @source: http://stackoverflow.com/a/13065073/1050554
+        rangeFrom.focus(function () {
+          $(this).select().one('mouseup', function (e) {
+            $(this).off('keyup');
+            e.preventDefault();
+          }).one('keyup', function () {
+            $(this).select().off('mouseup');
+          });
+        });
 
         rangeTo.numeric();
-        rangeTo.bind('keyup', function() {
+        rangeTo.bind('keyup', function(e) {
           clearTimeout(submitTimeout);
-          if (!isNaN(rangeTo.val()) && rangeTo.val() !== '') {
+          if (!isNaN(rangeTo.val()) && rangeTo.val() !== '' && e.keyCode == 13) {
             var value = parseInt(rangeTo.val());
             if (value < parseInt(rangeFrom.val())) {
               value = parseInt(rangeFrom.val());
@@ -64,6 +74,14 @@
             slider.slider("option", "values", [parseInt(rangeFrom.val()), value]);
             delaySubmit(widget);
           }
+        });
+        rangeTo.focus(function () {
+          $(this).select().one('mouseup', function (e) {
+            $(this).off('keyup');
+            e.preventDefault();
+          }).one('keyup', function () {
+            $(this).select().off('mouseup');
+          });
         });
       });
 
