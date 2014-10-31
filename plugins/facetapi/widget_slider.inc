@@ -56,9 +56,16 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
       '#type' => 'textfield',
       '#title' => t('Auto Submit Delay'),
       '#default_value' => $this->settings->settings['auto-submit-delay'],
-      '#description' => t('Automatically submit form after the user changes 
+      '#description' => t('Automatically submit form after the user changes
         releases slider handles. Enter a delay in milliseconds,
         i.e. 1000 for 1 second.'),
+      '#states' => array('visible' => array('select[name="widget"]' => array('value' => $this->id),),),
+    );
+    $form['widget']['widget_settings']['links'][$this->id]['min_range_value'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Minimum range value'),
+      '#default_value' => $this->settings->settings['min_range_value'],
+      '#description' => t('The minimum value for the range.'),
       '#states' => array('visible' => array('select[name="widget"]' => array('value' => $this->id),),),
     );
   }
@@ -108,8 +115,11 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     };
 
     // Calculate user input from/to values (different concept than min/max)
+    $target_path = $this->facet->getAdapter()->getSearchPath();
+    $reset_path = $target_path;
     foreach ($this->facet->getAdapter()->getAllActiveItems() as $key => $active_item) {
       if ($active_item['field alias'] == $this->facet['field alias']) {
+        $reset_path = $this->facet->getAdapter()->getFacetPath($this->facet->getFacet(), array($active_item['value']), TRUE);
         if (strpos($active_item['value'], ' ') === FALSE) {
           $values = array(
             0 => $active_item['value'],
@@ -126,6 +136,9 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     };
 
     // User from/to cannot exceed queried min/max, adjust if needed
+    if ($this->settings->settings['min_range_value'] !== '' && $min_value < $this->settings->settings['min_range_value']) {
+      $min_value = (int) $this->settings->settings['min_range_value'];
+    }
     if (!isset($from_value) || $from_value < $min_value) {
       $from_value = $min_value;
     };
@@ -153,7 +166,8 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
       'to' => $to_value,
       'auto_submit_delay' => is_numeric($this->settings->settings['auto-submit-delay']) ? $this->settings->settings['auto-submit-delay'] : 0,
       'active_items' => $this->facet->getAdapter()->getAllActiveItems(),
-      'target' => $this->facet->getAdapter()->getSearchPath(),
+      'target' => $target_path,
+      'reset_path' => $reset_path,
     );
     return drupal_get_form('search_api_ranges_block_slider_view_form', $variables);
   }
