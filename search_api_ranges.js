@@ -43,13 +43,20 @@
         rangeFrom.numeric();
         rangeFrom.bind('keyup', function(e) {
           clearTimeout(submitTimeout);
-          if (!isNaN(rangeFrom.val()) && rangeFrom.val() !== '' && e.keyCode == 13) {
+          if (!isNaN(rangeFrom.val()) && rangeFrom.val() !== '') {
             var value = parseInt(rangeFrom.val());
             if (value > parseInt(rangeTo.val())) {
               value = parseInt(rangeTo.val());
             }
+            if (value < parseInt(rangeMin.val())) {
+              value = parseInt(rangeMin.val());
+            }
             slider.slider("option", "values", [value, parseInt(rangeTo.val())]);
-            delaySubmit(widget);
+
+            if (e.keyCode == 13) {
+              $(this).val(value);
+              delaySubmit(widget);
+            }
           }
         });
         // Autoselect text on focus
@@ -66,13 +73,20 @@
         rangeTo.numeric();
         rangeTo.bind('keyup', function(e) {
           clearTimeout(submitTimeout);
-          if (!isNaN(rangeTo.val()) && rangeTo.val() !== '' && e.keyCode == 13) {
+          if (!isNaN(rangeTo.val()) && rangeTo.val() !== '') {
             var value = parseInt(rangeTo.val());
             if (value < parseInt(rangeFrom.val())) {
               value = parseInt(rangeFrom.val());
             }
+            if (value > parseInt(rangeMax.val())) {
+              value = parseInt(rangeMax.val());
+            }
             slider.slider("option", "values", [parseInt(rangeFrom.val()), value]);
-            delaySubmit(widget);
+
+            if (e.keyCode == 13) {
+              $(this).val(value);
+              delaySubmit(widget);
+            }
           }
         });
         rangeTo.focus(function () {
