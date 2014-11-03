@@ -117,8 +117,10 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     // Calculate user input from/to values (different concept than min/max)
     $target_path = $this->facet->getAdapter()->getSearchPath();
     $reset_path = $target_path;
+    $is_active = FALSE;
     foreach ($this->facet->getAdapter()->getAllActiveItems() as $key => $active_item) {
       if ($active_item['field alias'] == $this->facet['field alias']) {
+        $is_active = TRUE;
         $reset_path = $this->facet->getAdapter()->getFacetPath($this->facet->getFacet(), array($active_item['value']), TRUE);
         if (strpos($active_item['value'], ' ') === FALSE) {
           $values = array(
@@ -168,6 +170,7 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
       'active_items' => $this->facet->getAdapter()->getAllActiveItems(),
       'target' => $target_path,
       'reset_path' => $reset_path,
+      'is_active' => $is_active,
     );
     return drupal_get_form('search_api_ranges_block_slider_view_form', $variables);
   }

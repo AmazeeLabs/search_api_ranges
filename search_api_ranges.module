@@ -300,6 +300,9 @@ function search_api_ranges_block_slider_view_form($form, &$form_state, $variable
     '#type' => 'item',
     '#markup' => l('',$variables['reset_path'], array('absolute' => TRUE, 'attributes' => array('class' => array('reset-link')))),
   );
+  if (!empty($variables['is_active'])) {
+    $form['#attributes']['class'][] = 'active-facet';
+  }
   if ($variables['auto_submit_delay']) {
     $form['delay'] = array(
       '#type' => 'hidden',
