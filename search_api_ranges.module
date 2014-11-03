@@ -230,6 +230,17 @@ function search_api_ranges_minmax_execute(SearchApiQuery $query) {
 }
 
 /**
+ * Implementation of hook_forms();
+ *
+ */
+function search_api_ranges_forms($form_id, $args) {
+  if (strpos($form_id, 'search_api_ranges_block_slider_view_form') !== FALSE) {
+    $forms[$form_id] = array('callback' => 'search_api_ranges_block_slider_view_form');
+    return $forms;
+  }
+}
+
+/**
  * Generates the jQuery range slider form for range facet blocks
  */
 function search_api_ranges_block_slider_view_form($form, &$form_state, $variables) {
