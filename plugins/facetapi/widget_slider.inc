@@ -138,7 +138,7 @@ class SearchApiRangesWidgetUISlider extends FacetapiWidget {
     };
 
     // User from/to cannot exceed queried min/max, adjust if needed.
-    if ($this->settings->settings['min_range_value'] !== '' && $min_value < $this->settings->settings['min_range_value']) {
+    if (isset($this->settings->settings['min_range_value']) && $this->settings->settings['min_range_value'] !== '' && $min_value < $this->settings->settings['min_range_value']) {
       $min_value = (int) $this->settings->settings['min_range_value'];
     }
     if (!isset($from_value) || $from_value < $min_value) {
