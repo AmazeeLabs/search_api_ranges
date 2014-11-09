@@ -97,6 +97,26 @@
             $(this).select().off('mouseup');
           });
         });
+
+        // When the focus is lost: submit the form. But exclude cases when
+        // 1) focus is passed between range from/to elements,
+        // 2) values was not changed.
+        var valFrom = rangeFrom.val();
+        var valTo = rangeTo.val();
+        var onBlur = function() {
+          // We need to run our handler asynchronously, so that the
+          // document.activeElement is initialized by browser and we know the
+          // next focused element.
+          setTimeout(function() {
+            var focusLost = (document.activeElement != rangeFrom[0] && document.activeElement != rangeTo[0]);
+            var valuesChanged = (valFrom != rangeFrom.val() || valTo != rangeTo.val());
+            if (focusLost && valuesChanged) {
+              widget.find('form').submit();
+            }
+          }, 0);
+        };
+        rangeFrom.blur(onBlur);
+        rangeTo.blur(onBlur);
       });
 
       function delaySubmit(widget) {
