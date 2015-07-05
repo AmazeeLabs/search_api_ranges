@@ -4,7 +4,7 @@
 
       var submitTimeout = '';
 
-      $('div.search-api-ranges-widget').each(function() {
+      $('div.search-api-ranges-widget', context).each(function() {
 
         var widget = $(this);
         var slider = widget.find('div.range-slider');
